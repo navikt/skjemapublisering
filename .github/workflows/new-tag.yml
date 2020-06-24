@@ -1,6 +1,8 @@
 name: Update skjemabygger on new tag
 on:
   push:
+    tags:
+      - 'v*.*.*'
 jobs:
   create-PR:
     name: "Triggers pull request in skjemautfyller"
@@ -12,6 +14,11 @@ jobs:
           repository: navikt/skjemautfylling-formio
           token: ${{ secrets.SKJEMAPUBLISERING_TOKEN }}
           ref: skjemapublisering
-          fetch-depth: 0
-      - name: Test done
-        run: echo "DONE"
+      - name: Install json-tool
+        run: npm install json
+      - name: Get tag
+        run: echo ::set-env name=SKJEMAPUBLISERING_TAG::${GITHUB_REF#refs/*/}
+      - name: Update skjemapublisering version
+        run: echo "`jq '.dependencies.skjemapublisering="git+https://github.com/navikt/skjemapublisering-test.git#"$SKJEMAPUBLISERING_TAG""' skjemautfylling-formio/package.json`" > skjemautfylling/package.json
+      - name: Check package.json
+        run: cat skjemautfylling-formio/package.json
