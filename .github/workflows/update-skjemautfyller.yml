@@ -1,8 +1,8 @@
-name: Update skjemautfyller on test-update-packagejson push
+name: Update skjemautfyller on master push
 on:
   push:
     branches:
-      - test-update-packagejson
+      - master
 jobs:
   update-skjemautfyller-master:
     name: "Triggers a bump of the skjemapublisering dependency in skjemautfyller"
@@ -19,7 +19,7 @@ jobs:
         with:
           repository: navikt/skjemautfylling-formio
           token: ${{ secrets.SKJEMAPUBLISERING_TOKEN }}
-          ref: test-update-packagejson
+          ref: master
           fetch-depth: 0
       - name: Echo NEW_SKJEMAPUBLISERING_URL
         run: echo $NEW_SKJEMAPUBLISERING_URL
