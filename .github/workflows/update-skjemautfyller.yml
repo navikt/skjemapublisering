@@ -1,4 +1,4 @@
-name: Update skjemautfyller on master push
+name: Update skjemautfyller on test-update-packagejson push
 on:
   push:
     branches:
@@ -33,11 +33,14 @@ jobs:
         run: npm run test
       - name: build
         run: npm run build
+      - name: Check server/package.json and generate package-lock.json
+        run: cd server && npm install && npm run test && cd ..
       - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add package*.json
+          git add server/package*.json
           git commit -m "Bump skjemapublisering dependency to $NEW_SKJEMAPUBLISERING_URL"
       - name: Push changes
         run: git push
